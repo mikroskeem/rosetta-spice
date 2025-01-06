@@ -1,9 +1,9 @@
+{ flake }:
 { lib, pkgs, config, ... }:
 let
   inherit (lib) types;
 
   cfg = config.virtualisation.rosetta-spice;
-  flake = (import ../flake-compat.nix).defaultNix;
 
   rosetta = flake.packages.${pkgs.system}.rosetta;
   rosettaMountpoint = config.virtualisation.rosetta.mountPoint;

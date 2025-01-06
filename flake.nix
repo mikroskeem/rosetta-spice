@@ -1,32 +1,22 @@
 {
   description = "RosettaLinux augmentation tool";
 
-  inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
-  };
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
-  outputs = { self, nixpkgs, flake-utils, ... }: let
-    # System types to support.
-    supportedSystems = [ "aarch64-linux" ];
-  in flake-utils.lib.eachSystem supportedSystems (system: let
-    pkgs = nixpkgs.legacyPackages.${system};
+  outputs = { self, nixpkgs, ... }: let
+    pkgs = nixpkgs.legacyPackages.aarch64-linux;
     inherit (pkgs) lib;
 
     patchRosetta = pkgs.callPackage ./patch-rosetta.nix {
-      rosetta-spice = self.packages.${system}.rosetta-spice;
+      rosetta-spice = self.packages.aarch64-linux.rosetta-spice;
     };
   in {
-    packages = rec {
+    packages.aarch64-linux = rec {
       rosetta-spice = pkgs.rustPlatform.buildRustPackage {
         name = "rosetta-spice";
         src = lib.cleanSourceWith {
           filter = name: type: !(lib.hasSuffix ".nix" name);
-          src = ./.;
+          src = self;
         };
         cargoLock.lockFile = ./Cargo.lock;
       };
@@ -34,7 +24,7 @@
       rosetta = patchRosetta rosetta-orig;
     };
 
-    devShell = pkgs.mkShell {
+    devShell.aarch64-linux = pkgs.mkShell {
       nativeBuildInputs = with pkgs; [
         rustc cargo rustfmt clippy
         pkg-config
@@ -43,7 +33,9 @@
         bbe
       ];
     };
-  }) // {
-    nixosModules.rosetta-spice = import ./nixos;
+  } // {
+    nixosModules.rosetta-spice = import ./nixos {
+      flake = self;
+    };
   };
 }
