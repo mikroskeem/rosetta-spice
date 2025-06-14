@@ -2,11 +2,11 @@
 let
   # https://swscan.apple.com/content/catalogs/others/index-rosettaupdateauto-1.sucatalog.gz
 
-  # Sequoia 15.2
-  version = "24C101";
+  # Sequoia 15.5
+  version = "24F74";
   src = fetchurl {
-    url = "https://swcdn.apple.com/content/downloads/56/11/072-44352-A_TZG2YTBMAZ/hnqfqmuuulu2yf3n226fqu7phar2jpago2/RosettaUpdateAuto.pkg";
-    hash = "sha256-fP/4HbPkMUz1LQrK1bJ0aEp+U1q7GYiCzY6/b5OptoY=";
+    url = "https://swcdn.apple.com/content/downloads/34/05/082-44576-A_XFN7Y7QSUP/199d74a1yz7r7jzqhtgswkg8q10zpddsys/RosettaUpdateAuto.pkg";
+    hash = "sha256-nl0SzY8zpbGIv0zLP6syDHM3V52YqQyVM+JrMXgNu00=";
   };
 
   drv = stdenv.mkDerivation {
